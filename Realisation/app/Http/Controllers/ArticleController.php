@@ -37,13 +37,9 @@ class ArticleController extends Controller
     public function store(StoreArticleRequest $request)
     {
         $valideted = $request->validated();
-
-        $article = Article::create([
-            'title'=> $valideted->only('title'),
-            'content'=> $valideted->only('content'),
-            'user_id'=>Auth::user()->id,
-            'category_id'=> $valideted->only('category'),
-        ]);
+        $valideted['user_id'] = Auth::id();
+        $valideted['category_id'] =  $valideted['category'];
+        $article = Article::create($valideted);
         $article->tags()->attach($request->tags);
 
         return redirect()->route('article.index')->with('success', 'Article créé avec succès.');
