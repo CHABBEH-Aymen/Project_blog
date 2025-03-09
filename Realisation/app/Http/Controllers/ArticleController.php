@@ -68,8 +68,8 @@ class ArticleController extends Controller
      */
     public function update(UpdateArticleRequest $request, Article $article)
     {
+        if($request->user()->cannot('update')) abort(403);
         $valideted = $request->validated();
-
         $article->update([
             'title'=> $valideted->only('title'),
             'content'=> $valideted->only('content'),
